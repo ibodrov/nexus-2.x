@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2007-2014 Sonatype, Inc. All rights reserved.
  *
- * This program is licensed to you under the Apache License Version 2.0,
- * and you may not use this file except in compliance with the Apache License Version 2.0.
- * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ * This program is licensed to you under the Apache License Version 2.0, and you may not use this
+ * file except in compliance with the Apache License Version 2.0. You may obtain a copy of the
+ * Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the Apache License Version 2.0 is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ * Unless required by applicable law or agreed to in writing, software distributed under the Apache
+ * License Version 2.0 is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the Apache License Version 2.0 for the specific language
+ * governing permissions and limitations there under.
  */
 package com.bolyuba.nexus.plugin.npm.service.internal;
 
@@ -36,17 +36,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@link Generator} support class.
  */
-public abstract class GeneratorSupport<R extends NpmRepository>
-    extends ComponentSupport
-    implements Generator
-{
+public abstract class GeneratorSupport<R extends NpmRepository> extends ComponentSupport implements Generator {
   private final R npmRepository;
 
   protected final MetadataParser metadataParser;
 
-  protected GeneratorSupport(final R npmRepository,
-                             final MetadataParser metadataParser)
-  {
+  protected GeneratorSupport(final R npmRepository, final MetadataParser metadataParser) {
     this.npmRepository = checkNotNull(npmRepository);
     this.metadataParser = checkNotNull(metadataParser);
   }
@@ -104,8 +99,7 @@ public abstract class GeneratorSupport<R extends NpmRepository>
   @Nullable
   @Override
   public PackageRoot generatePackageRoot(final PackageRequest request) throws IOException {
-    checkArgument(request.isPackageRoot(), "Package root request expected, but got %s",
-        request.getPath());
+    checkArgument(request.isPackageRoot(), "Package root request expected, but got %s", request.getPath());
     final PackageRoot root = doGeneratePackageRoot(request);
     if (root == null) {
       return null;
@@ -120,8 +114,7 @@ public abstract class GeneratorSupport<R extends NpmRepository>
   @Nullable
   @Override
   public PackageVersion generatePackageVersion(final PackageRequest request) throws IOException {
-    checkArgument(request.isPackageVersion(), "Package version request expected, but got %s",
-        request.getPath());
+    checkArgument(request.isPackageVersion(), "Package version request expected, but got %s", request.getPath());
     final PackageVersion version = doGeneratePackageVersion(request);
     if (version == null) {
       return null;
@@ -132,8 +125,7 @@ public abstract class GeneratorSupport<R extends NpmRepository>
 
   @Nullable
   protected PackageVersion doGeneratePackageVersion(final PackageRequest request) throws IOException {
-    checkArgument(request.isPackageVersion(), "Package version request expected, but got %s",
-        request.getPath());
+    checkArgument(request.isPackageVersion(), "Package version request expected, but got %s", request.getPath());
     final PackageRoot root = doGeneratePackageRoot(request);
     if (root == null || root.isUnpublished()) {
       return null;
@@ -183,16 +175,46 @@ public abstract class GeneratorSupport<R extends NpmRepository>
    * sent for downstream consumption only!
    */
   protected void filterPackageVersionDist(final PackageRequest packageRequest, final PackageVersion packageVersion) {
+    String baseUrl;
+    String npmRepositoryId;
+    String packageVersionName;
+    String tarball;
     if (npmRepository.adaptToFacet(GroupRepository.class) != null) {
-      packageVersion.setDistTarball(SimpleFormat
-          .format("%s/content/groups/%s/%s/-/%s", BaseUrlHolder.get(), npmRepository.getId(),
-              packageVersion.getName(), packageVersion.getDistTarballFilename()));
+      baseUrl = BaseUrlHolder.get();
+      npmRepositoryId = npmRepository.getId();
+      packageVersionName = packageVersion.getName();
+      tarball = packageVersion.getDistTarballFilename();
+    } else {
+      baseUrl = BaseUrlHolder.get();
+      npmRepositoryId = npmRepository.getId();
+      packageVersionName = packageVersion.getName();
+      tarball = packageVersion.getDistTarballFilename();
     }
-    else {
-      packageVersion.setDistTarball(SimpleFormat
-          .format("%s/content/repositories/%s/%s/-/%s", BaseUrlHolder.get(), npmRepository.getId(),
-              packageVersion.getName(), packageVersion.getDistTarballFilename()));
+    //
+    // This is to correct for a miscalculation of the baseUrl in Nexus where an incoming path like:
+    //
+    // http://localhost:8081/nexus/content/repositories/npmjs-internal/@jvz%2fapp1    
+    // 
+    // Yields a baseUrl of:
+    //
+    // http://localhost:8081/nexus/c
+    //
+    // Where a path like: 
+    //
+    // http://localhost:8081/nexus/content/repositories/npmjs-internal/@jvz/app1
+    //
+    // Yields the correct baseUrl of:
+    //
+    // http://localhost:8081/nexus
+    //
+    // Looks like a substring error when the baseUrl is calculated in BaseUrlHolder
+    // but it is probably only the NPM client that encodes request paths like
+    // this but I just wanted to make a note.
+    //
+    if(baseUrl.endsWith("/c")) {
+      baseUrl = baseUrl.substring(0, baseUrl.length() - 2);
     }
+    packageVersion.setDistTarball(SimpleFormat.format("%s/content/repositories/%s/%s/-/%s", baseUrl, npmRepositoryId, packageVersionName, tarball));
     final String versionTarballShasum = PackageVersion.createShasumVersionKey(packageVersion.getVersion());
     if (packageVersion.getRoot().getProperties().containsKey(versionTarballShasum)) {
       // this publishes proper SHA1 for ALL packages already proxies by NX

@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2007-2014 Sonatype, Inc. and Georgy Bolyuba. All rights reserved.
  *
- * This program is licensed to you under the Apache License Version 2.0,
- * and you may not use this file except in compliance with the Apache License Version 2.0.
- * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ * This program is licensed to you under the Apache License Version 2.0, and you may not use this
+ * file except in compliance with the Apache License Version 2.0. You may obtain a copy of the
+ * Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the Apache License Version 2.0 is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ * Unless required by applicable law or agreed to in writing, software distributed under the Apache
+ * License Version 2.0 is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the Apache License Version 2.0 for the specific language
+ * governing permissions and limitations there under.
  */
 package com.bolyuba.nexus.plugin.npm.service;
 
@@ -23,18 +23,18 @@ import com.google.common.base.Strings;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Commonjs package request. Represents domain of valid requests including registry "special" like {@code /-/all}
+ * Commonjs package request. Represents domain of valid requests including registry "special" like
+ * {@code /-/all}
  *
  * @author <a href="mailto:georgy@bolyuba.com">Georgy Bolyuba</a>
  */
-public class PackageRequest
-{
+public class PackageRequest {
   private final ResourceStoreRequest storeRequest;
 
   private final PackageCoordinates coordinates;
 
-  public PackageRequest(@Nonnull ResourceStoreRequest storeRequest) throws IllegalArgumentException {
-
+  public PackageRequest(@Nonnull ResourceStoreRequest storeRequest)
+      throws IllegalArgumentException {
     this.storeRequest = checkNotNull(storeRequest);
     this.coordinates = PackageCoordinates.coordinatesFromUrl(storeRequest.getRequestPath());
   }
@@ -67,7 +67,9 @@ public class PackageRequest
     return isRegistryRoot() || isPackageRoot() || isPackageVersion();
   }
 
-  public boolean isScoped() { return !Strings.isNullOrEmpty(coordinates.getScope()); }
+  public boolean isScoped() {
+    return !Strings.isNullOrEmpty(coordinates.getScope());
+  }
 
   public String getPath() {
     return coordinates.getPath();
@@ -87,22 +89,15 @@ public class PackageRequest
 
   @Override
   public String toString() {
-    return "PackageRequest{" +
-        "storeRequest=" + storeRequest +
-        ", coordinates=" + coordinates +
-        '}';
+    return "PackageRequest{" + "storeRequest=" + storeRequest + ", coordinates=" + coordinates
+        + '}';
   }
 
   // == coordinate
 
-  static class PackageCoordinates
-  {
-    static enum Type
-    {
-      REGISTRY_ROOT,
-      PACKAGE_ROOT,
-      PACKAGE_VERSION,
-      REGISTRY_SPECIAL
+  static class PackageCoordinates {
+    static enum Type {
+      REGISTRY_ROOT, PACKAGE_ROOT, PACKAGE_VERSION, REGISTRY_SPECIAL
     }
 
     private PackageCoordinates() {}
@@ -125,7 +120,9 @@ public class PackageRequest
       }
     }
 
-    public String getScope() { return scope; }
+    public String getScope() {
+      return scope;
+    }
 
     public String getPackageName() {
       return packageName;
@@ -145,16 +142,16 @@ public class PackageRequest
 
     @Override
     public String toString() {
-      return "PackageCoordinates{" +
-          "type=" + type +
-          ", scope='" + scope + '\'' +
-          ", packageName='" + packageName + '\'' +
-          ", packageVersion='" + packageVersion + '\'' +
-          ", path='" + path + '\'' +
-          '}';
+      return "PackageCoordinates{" + "type=" + type + ", scope='" + scope + '\'' + ", packageName='"
+          + packageName + '\'' + ", packageVersion='" + packageVersion + '\'' + ", path='" + path
+          + '\'' + '}';
     }
 
-    public static PackageCoordinates coordinatesFromUrl(@Nonnull String requestPath) throws IllegalArgumentException {
+    public static PackageCoordinates coordinatesFromUrl(@Nonnull String requestPath)
+        throws IllegalArgumentException {
+
+      System.out.println(">> " + requestPath);
+
       PackageCoordinates coordinates = new PackageCoordinates();
       coordinates.path = requestPath;
 
@@ -163,46 +160,83 @@ public class PackageRequest
         return coordinates;
       }
 
-      if (requestPath.startsWith(
-          RepositoryItemUid.PATH_SEPARATOR + NpmRepository.NPM_REGISTRY_SPECIAL + RepositoryItemUid.PATH_SEPARATOR)) {
+      if (requestPath.startsWith(RepositoryItemUid.PATH_SEPARATOR
+          + NpmRepository.NPM_REGISTRY_SPECIAL + RepositoryItemUid.PATH_SEPARATOR)) {
         coordinates.type = Type.REGISTRY_SPECIAL;
         return coordinates;
       }
 
-      String correctedPath =
-          requestPath.startsWith(RepositoryItemUid.PATH_SEPARATOR) ?
-              requestPath.substring(1, requestPath.length()) :
-              requestPath;
+      String correctedPath = requestPath.startsWith(RepositoryItemUid.PATH_SEPARATOR)
+          ? requestPath.substring(1, requestPath.length()) : requestPath;
       String[] explodedPath = correctedPath.split(RepositoryItemUid.PATH_SEPARATOR);
 
-      if (explodedPath.length == 2) {
-        if (explodedPath[0].startsWith("@")) {
+      System.out.print(explodedPath.length + " ");
+      for (String s : explodedPath) {
+        System.out.print(s + " ");
+      }
+      System.out.println();
+
+      if (explodedPath[0].startsWith("@")) {
+        // Scoped request
+        if (explodedPath.length == 2) {
           coordinates.type = Type.PACKAGE_ROOT;
           coordinates.scope = validate(explodedPath[0].substring(1), "Invalid package scope: ");
           coordinates.packageName = "@" + coordinates.scope + "/" + validate(explodedPath[1], "Invalid package name: ");
           return coordinates;
-        } else {
+        } else if (explodedPath.length == 3) {
+          coordinates.type = Type.PACKAGE_VERSION;
+          coordinates.packageName = "@" + coordinates.scope + "/" + validate(explodedPath[1], "Invalid package name: ");
+          coordinates.packageVersion = validate(explodedPath[2], "Invalid package version: ");
+          return coordinates;
+        }
+      } else {
+        // Non-scoped request
+        if (explodedPath.length == 1) {
+          coordinates.type = Type.PACKAGE_ROOT;
+          coordinates.packageName = validate(explodedPath[0], "Invalid package name: ");
+          return coordinates;
+        } else if (explodedPath.length == 2) {
           coordinates.type = Type.PACKAGE_VERSION;
           coordinates.packageName = validate(explodedPath[0], "Invalid package name: ");
           coordinates.packageVersion = validate(explodedPath[1], "Invalid package version: ");
           return coordinates;
         }
       }
-      if (explodedPath.length == 1) {
-        coordinates.type = Type.PACKAGE_ROOT;
-        coordinates.packageName = validate(explodedPath[0], "Invalid package name: ");
-        return coordinates;
-      }
 
-      throw new IllegalArgumentException("Path " + requestPath + " cannot be turned into PackageCoordinates");
+      /*
+       * 
+       * // publish if (explodedPath.length == 5) { if (explodedPath[0].startsWith("@")) {
+       * coordinates.type = Type.PACKAGE_VERSION; coordinates.scope =
+       * validate(explodedPath[0].substring(1), "Invalid package scope: "); coordinates.packageName
+       * = "@" + coordinates.scope + "/" + validate(explodedPath[1], "Invalid package name: ");
+       * coordinates.packageVersion = validate(explodedPath[2], "Invalid package version: "); return
+       * coordinates; } } if (explodedPath.length == 3) { if (explodedPath[0].startsWith("@")) {
+       * coordinates.type = Type.PACKAGE_VERSION; // coordinates.scope =
+       * validate(explodedPath[0].substring(1), "Invalid package scope: "); //
+       * coordinates.packageName = "@" + coordinates.scope + "/" + validate(explodedPath[1], //
+       * "Invalid package name: "); coordinates.packageName = "@" + coordinates.scope + "/" +
+       * validate(explodedPath[1], "Invalid package name: "); coordinates.packageVersion =
+       * validate(explodedPath[2], "Invalid package version: "); return coordinates; } } if
+       * (explodedPath.length == 2) { if (explodedPath[0].startsWith("@")) { coordinates.type =
+       * Type.PACKAGE_ROOT; coordinates.scope = validate(explodedPath[0].substring(1),
+       * "Invalid package scope: "); coordinates.packageName = "@" + coordinates.scope + "/" +
+       * validate(explodedPath[1], "Invalid package name: "); return coordinates; } else {
+       * coordinates.type = Type.PACKAGE_VERSION; coordinates.packageName =
+       * validate(explodedPath[0], "Invalid package name: "); coordinates.packageVersion =
+       * validate(explodedPath[1], "Invalid package version: "); return coordinates; } } if
+       * (explodedPath.length == 1) { coordinates.type = Type.PACKAGE_ROOT; coordinates.packageName
+       * = validate(explodedPath[0], "Invalid package name: "); return coordinates; }
+       */
+
+      throw new IllegalArgumentException(
+          "Path " + requestPath + " cannot be turned into PackageCoordinates");
     }
 
     /**
      * See http://wiki.commonjs.org/wiki/Packages/Registry#Changes_to_Packages_Spec
      */
     private static String validate(@Nonnull String nameOrVersion, String errorPrefix)
-        throws IllegalArgumentException
-    {
+        throws IllegalArgumentException {
       if (nameOrVersion.startsWith(NpmRepository.NPM_REGISTRY_SPECIAL)) {
         throw new IllegalArgumentException(errorPrefix + nameOrVersion);
       }

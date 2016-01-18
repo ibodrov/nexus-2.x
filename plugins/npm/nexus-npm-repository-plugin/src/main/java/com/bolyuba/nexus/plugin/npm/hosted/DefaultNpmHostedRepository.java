@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2007-2014 Sonatype, Inc. and Georgy Bolyuba. All rights reserved.
  *
- * This program is licensed to you under the Apache License Version 2.0,
- * and you may not use this file except in compliance with the Apache License Version 2.0.
- * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ * This program is licensed to you under the Apache License Version 2.0, and you may not use this
+ * file except in compliance with the Apache License Version 2.0. You may obtain a copy of the
+ * Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the Apache License Version 2.0 is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ * Unless required by applicable law or agreed to in writing, software distributed under the Apache
+ * License Version 2.0 is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the Apache License Version 2.0 for the specific language
+ * governing permissions and limitations there under.
  */
 package com.bolyuba.nexus.plugin.npm.hosted;
 
@@ -70,10 +70,7 @@ import static org.sonatype.nexus.proxy.ItemNotFoundException.reasonFor;
 @Named(DefaultNpmHostedRepository.ROLE_HINT)
 @Typed(Repository.class)
 @Description("Npm registry hosted repo")
-public class DefaultNpmHostedRepository
-    extends AbstractRepository
-    implements NpmHostedRepository, Repository
-{
+public class DefaultNpmHostedRepository extends AbstractRepository implements NpmHostedRepository, Repository {
 
   public static final String ROLE_HINT = "npm-hosted";
 
@@ -88,10 +85,8 @@ public class DefaultNpmHostedRepository
   private final HostedMetadataService hostedMetadataService;
 
   @Inject
-  public DefaultNpmHostedRepository(final @Named(NpmContentClass.ID) ContentClass contentClass,
-                                    final NpmHostedRepositoryConfigurator configurator,
-                                    final MetadataServiceFactory metadataServiceFactory)
-  {
+  public DefaultNpmHostedRepository(final @Named(NpmContentClass.ID) ContentClass contentClass, final NpmHostedRepositoryConfigurator configurator,
+      final MetadataServiceFactory metadataServiceFactory) {
     this.hostedMetadataService = metadataServiceFactory.createHostedMetadataService(this);
     this.mimeRulesSource = new NpmMimeRulesSource();
     this.contentClass = checkNotNull(contentClass);
@@ -101,14 +96,11 @@ public class DefaultNpmHostedRepository
 
   @Override
   public boolean recreateNpmMetadata() {
-    final DefaultWalkerContext context = new DefaultWalkerContext(this,
-        new ResourceStoreRequest(RepositoryItemUid.PATH_ROOT), new DefaultStoreWalkerFilter());
-    final RecreateMetadataWalkerProcessor processor =
-        new RecreateMetadataWalkerProcessor(getMetadataService());
+    final DefaultWalkerContext context = new DefaultWalkerContext(this, new ResourceStoreRequest(RepositoryItemUid.PATH_ROOT), new DefaultStoreWalkerFilter());
+    final RecreateMetadataWalkerProcessor processor = new RecreateMetadataWalkerProcessor(getMetadataService());
     context.getProcessors().add(processor);
     getWalker().walk(context);
-    log.info("Recreated npm metadata on {} (packageRoots={}/packageVersions={})", this,
-        processor.getPackageRoots(), processor.getPackageVersions());
+    log.info("Recreated npm metadata on {} (packageRoots={}/packageVersions={})", this, processor.getPackageRoots(), processor.getPackageVersions());
     return processor.getPackageRoots() > 0;
   }
 
@@ -121,7 +113,9 @@ public class DefaultNpmHostedRepository
   }
 
   @Override
-  public HostedMetadataService getMetadataService() { return hostedMetadataService; }
+  public HostedMetadataService getMetadataService() {
+    return hostedMetadataService;
+  }
 
   @Override
   protected Configurator getConfigurator() {
@@ -145,8 +139,7 @@ public class DefaultNpmHostedRepository
 
   @Override
   protected CRepositoryExternalConfigurationHolderFactory<?> getExternalConfigurationHolderFactory() {
-    return new CRepositoryExternalConfigurationHolderFactory<NpmHostedRepositoryConfiguration>()
-    {
+    return new CRepositoryExternalConfigurationHolderFactory<NpmHostedRepositoryConfiguration>() {
       @Override
       public NpmHostedRepositoryConfiguration createExternalConfigurationHolder(final CRepository config) {
         return new NpmHostedRepositoryConfiguration((Xpp3Dom) config.getExternalConfiguration());
@@ -156,9 +149,7 @@ public class DefaultNpmHostedRepository
 
   // TODO: npm hosted and proxy repositories have similar retrieve code, factor it out or keep in sync
   @Override
-  protected AbstractStorageItem doRetrieveLocalItem(ResourceStoreRequest storeRequest)
-      throws ItemNotFoundException, LocalStorageException
-  {
+  protected AbstractStorageItem doRetrieveLocalItem(ResourceStoreRequest storeRequest) throws ItemNotFoundException, LocalStorageException {
     try {
       if (!getMetadataService().isNpmMetadataServiced(storeRequest)) {
         // shut down NPM MD+tarball service completely
@@ -167,8 +158,7 @@ public class DefaultNpmHostedRepository
       PackageRequest packageRequest = null;
       try {
         packageRequest = new PackageRequest(storeRequest);
-      }
-      catch (IllegalArgumentException e) {
+      } catch (IllegalArgumentException e) {
         // something completely different
         return delegateDoRetrieveLocalItem(storeRequest);
       }
@@ -178,86 +168,67 @@ public class DefaultNpmHostedRepository
           if (packageRequest.isRegistryRoot()) {
             log.debug("Serving registry root...");
             contentLocator = hostedMetadataService.produceRegistryRoot(packageRequest);
-          }
-          else if (packageRequest.isPackageRoot()) {
+          } else if (packageRequest.isPackageRoot()) {
             log.debug("Serving package {} root...", packageRequest.getName());
             contentLocator = hostedMetadataService.producePackageRoot(packageRequest);
-          }
-          else {
+          } else {
             log.debug("Serving package {} version {}...", packageRequest.getName(), packageRequest.getVersion());
             contentLocator = hostedMetadataService.producePackageVersion(packageRequest);
           }
           if (contentLocator != null) {
             return new DefaultStorageFileItem(this, storeRequest, true, true, contentLocator);
           }
-        }
-        else {
+        } else {
           // registry special
           if (packageRequest.isRegistrySpecial() && packageRequest.getPath().startsWith("/-/all")) {
             log.debug("Serving registry root from /-/all...");
-            return new DefaultStorageFileItem(this, storeRequest, true, true,
-                hostedMetadataService.produceRegistryRoot(
-                    packageRequest));
+            return new DefaultStorageFileItem(this, storeRequest, true, true, hostedMetadataService.produceRegistryRoot(packageRequest));
           }
           log.debug("Unknown registry special {}", packageRequest.getPath());
         }
       }
       log.debug("No NPM metadata for path {}", storeRequest.getRequestPath());
-      throw new ItemNotFoundException(
-          reasonFor(storeRequest, this, "No content for path %s", storeRequest.getRequestPath()));
-    }
-    catch (IOException e) {
+      throw new ItemNotFoundException(reasonFor(storeRequest, this, "No content for path %s", storeRequest.getRequestPath()));
+    } catch (IOException e) {
       throw new LocalStorageException("Metadata service error", e);
     }
   }
 
-  AbstractStorageItem delegateDoRetrieveLocalItem(ResourceStoreRequest storeRequest)
-      throws LocalStorageException, ItemNotFoundException
-  {
+  AbstractStorageItem delegateDoRetrieveLocalItem(ResourceStoreRequest storeRequest) throws LocalStorageException, ItemNotFoundException {
     return super.doRetrieveLocalItem(storeRequest);
   }
 
   @Override
-  public Action getResultingActionOnWrite(final ResourceStoreRequest rsr)
-      throws LocalStorageException
-  {
+  public Action getResultingActionOnWrite(final ResourceStoreRequest rsr) throws LocalStorageException {
     return getResultingActionOnWrite(rsr, null);
   }
 
-  private Action getResultingActionOnWrite(final ResourceStoreRequest rsr, final PackageRoot packageRoot)
-      throws LocalStorageException
-  {
+  private Action getResultingActionOnWrite(final ResourceStoreRequest rsr, final PackageRoot packageRoot) throws LocalStorageException {
     try {
       if (packageRoot != null) {
         // treat package version as entity
         for (PackageVersion version : packageRoot.getVersions().values()) {
-          if (hostedMetadataService.generatePackageVersion(
-              new PackageRequest(new ResourceStoreRequest("/" + version.getName() + "/" + version.getVersion()))) !=
-              null) {
+          if (hostedMetadataService.generatePackageVersion(new PackageRequest(new ResourceStoreRequest("/" + version.getName() + "/" + version.getVersion()))) != null) {
             return Action.update;
           }
         }
         return Action.create;
-      }
-      else {
+      } else {
         try {
           final PackageRequest packageRequest = new PackageRequest(rsr);
           if (packageRequest.isPackage()) {
             // treat package root as entity
             return hostedMetadataService.generatePackageRoot(packageRequest) == null ? Action.create : Action.update;
-          }
-          else {
+          } else {
             // not a package request, do what originally happened
             return super.getResultingActionOnWrite(rsr);
           }
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
           // not a package request, do what originally happened
           return super.getResultingActionOnWrite(rsr);
         }
       }
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new LocalStorageException("Metadata service error", e);
     }
   }
@@ -265,8 +236,7 @@ public class DefaultNpmHostedRepository
   @SuppressWarnings("deprecation")
   @Override
   public void storeItem(ResourceStoreRequest request, InputStream is, Map<String, String> userAttributes)
-      throws UnsupportedStorageOperationException, IllegalOperationException, StorageException, AccessDeniedException
-  {
+      throws UnsupportedStorageOperationException, IllegalOperationException, StorageException, AccessDeniedException {
     try {
       PackageRequest packageRequest = null;
       try {
@@ -279,8 +249,7 @@ public class DefaultNpmHostedRepository
 
       if (packageRequest != null) {
         if (!packageRequest.isPackageRoot()) {
-          throw new UnsupportedStorageOperationException(
-              "Store operations are only valid for package roots, path: " + packageRequest.getPath());
+          throw new UnsupportedStorageOperationException("Store operations are only valid for package roots, path: " + packageRequest.getPath());
         }
 
         // serialize all publish request for the same
@@ -289,13 +258,11 @@ public class DefaultNpmHostedRepository
 
         publisherLock.lock(Action.create);
         try {
-          PackageRoot packageRoot = hostedMetadataService.parsePackageRoot(packageRequest,
-              new PreparedContentLocator(is, NpmRepository.JSON_MIME_TYPE, ContentLocator.UNKNOWN_LENGTH));
+          PackageRoot packageRoot = hostedMetadataService.parsePackageRoot(packageRequest, new PreparedContentLocator(is, NpmRepository.JSON_MIME_TYPE, ContentLocator.UNKNOWN_LENGTH));
 
           try {
             checkConditions(request, getResultingActionOnWrite(request, packageRoot));
-          }
-          catch (ItemNotFoundException e) {
+          } catch (ItemNotFoundException e) {
             throw new AccessDeniedException(request, e.getMessage());
           }
 
@@ -305,38 +272,38 @@ public class DefaultNpmHostedRepository
             for (NpmBlob attachment : packageRoot.getAttachments().values()) {
               try {
                 final ResourceStoreRequest attachmentRequest = new ResourceStoreRequest(request);
-                attachmentRequest.setRequestPath(
-                    packageRequest.getPath() + RepositoryItemUid.PATH_SEPARATOR + NPM_REGISTRY_SPECIAL +
-                        RepositoryItemUid.PATH_SEPARATOR + attachment.getName());
+                String attachmentName = attachment.getName();
+                System.out.println(attachmentName);
+                // Remove the scope name as we already have it baked into the path
+                int i = attachmentName.indexOf('@');
+                int j = attachmentName.indexOf('/');
+                if((i == 0) && (j > 0) && (j > i)) {
+                  attachmentName = attachmentName.substring(j+1);
+                }
+                attachmentRequest.setRequestPath(packageRequest.getPath() + RepositoryItemUid.PATH_SEPARATOR + NPM_REGISTRY_SPECIAL + RepositoryItemUid.PATH_SEPARATOR + attachmentName);
                 super.storeItem(attachmentRequest, attachment.getContent(), userAttributes);
-              }
-              finally {
+              } finally {
                 // delete temporary files backing attachment
                 attachment.delete();
               }
             }
           }
-        }
-        finally {
+        } finally {
           publisherLock.unlock();
         }
       }
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new LocalStorageException("Upload problem", e);
     }
   }
 
   // TODO: npm hosted and proxy repositories have same deleteItem code, factor it out or keep in sync
   @Override
-  public void deleteItem(boolean fromTask, ResourceStoreRequest storeRequest)
-      throws UnsupportedStorageOperationException, IllegalOperationException, ItemNotFoundException, StorageException
-  {
+  public void deleteItem(boolean fromTask, ResourceStoreRequest storeRequest) throws UnsupportedStorageOperationException, IllegalOperationException, ItemNotFoundException, StorageException {
     PackageRequest packageRequest = null;
     try {
       packageRequest = new PackageRequest(storeRequest);
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       // something completely different
     }
     boolean supressItemNotFound = false;
@@ -345,8 +312,7 @@ public class DefaultNpmHostedRepository
         if (packageRequest.isRegistryRoot()) {
           log.debug("Deleting registry root...");
           getMetadataService().deleteAllMetadata();
-        }
-        else if (packageRequest.isPackageRoot()) {
+        } else if (packageRequest.isPackageRoot()) {
           log.debug("Deleting package {} root...", packageRequest.getName());
           supressItemNotFound = getMetadataService().deletePackage(packageRequest.getName());
         }
@@ -354,8 +320,7 @@ public class DefaultNpmHostedRepository
     }
     try {
       super.deleteItem(fromTask, storeRequest);
-    }
-    catch (ItemNotFoundException e) {
+    } catch (ItemNotFoundException e) {
       // this allows to delete package metadata only, where no tarballs were cached/deployed for some reason
       if (!supressItemNotFound) {
         throw e;
