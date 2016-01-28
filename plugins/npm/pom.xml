@@ -100,14 +100,6 @@
   </dependencyManagement>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonatype.nexus</groupId>
-        <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
-        <version>1.3-SNAPSHOT</version>
-        <extensions>true</extensions>
-      </plugin>    
-    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>

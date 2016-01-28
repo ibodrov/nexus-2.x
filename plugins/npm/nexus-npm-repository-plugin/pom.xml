@@ -80,8 +80,9 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.nexus</groupId>
+        <groupId>io.takari.nexus</groupId>
         <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
+        <version>1.5-SNAPSHOT</version>
         <extensions>true</extensions>
       </plugin>
 

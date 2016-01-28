@@ -59,6 +59,16 @@
         <include>*:nexus-capabilities-plugin</include>
         <include>*:nexus-atlas-plugin</include>
         <include>*:nexus-wonderland-plugin</include>
+        <!-- Include all the plugins -->
+        <include>*:nexus-npm-repository-plugin</include>
+        <!--
+        <include>*:nexus-nuget-plugin</include>
+        -->
+        <include>*:nexus-rrb-plugin</include>
+        <include>*:nexus-ruby-plugin</include>
+        <include>*:nexus-rutauth-plugin</include>
+        <include>*:nexus-site-repository-plugin</include>
+        <include>*:nexus-yum-repository-plugin</include>
       </includes>
     </dependencySet>
     <dependencySet>
