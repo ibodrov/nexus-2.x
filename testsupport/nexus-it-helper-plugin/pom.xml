@@ -61,7 +61,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.nexus</groupId>
+        <groupId>io.takari.nexus</groupId>
         <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
       </plugin>
     </plugins>

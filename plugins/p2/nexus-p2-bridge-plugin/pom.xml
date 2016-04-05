@@ -152,7 +152,7 @@
       </plugin>
 
       <plugin>
-        <groupId>org.sonatype.nexus</groupId>
+        <groupId>io.takari.nexus</groupId>
         <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
         <configuration>
           <assemblyDescriptor>${project.basedir}/src/main/assemble/bundle.xml</assemblyDescriptor>

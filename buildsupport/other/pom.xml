@@ -32,7 +32,7 @@
       <dependency>
         <groupId>org.sonatype.nexus</groupId>
         <artifactId>nexus-plugin-bundle-model</artifactId>
-        <version>${nexus-plugin-bundle.version}</version>
+        <version>1.2</version> <!-- Model must be in sync: io.takari.nexus:nexus-plugin-bundle-maven-plugin -->
       </dependency>
 
       <dependency>

@@ -100,7 +100,7 @@
     <!--
     Configuration of 'nexus-plugin' packaging and bundles.
     -->
-    <nexus-plugin-bundle.version>1.2</nexus-plugin-bundle.version>
+    <nexus-plugin-bundle.version>1.5</nexus-plugin-bundle.version>
     <nexus-plugin.type>nexus-plugin</nexus-plugin.type>
 
     <!-- logging configuration used in logback config files to control test logging -->
@@ -521,7 +521,7 @@
         Support for nexus-plugin packaging.
         -->
         <plugin>
-          <groupId>org.sonatype.nexus</groupId>
+          <groupId>io.takari.nexus</groupId>
           <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
           <version>${nexus-plugin-bundle.version}</version>
           <extensions>true</extensions>
@@ -660,13 +660,6 @@
             <configuration>
               <fail>true</fail>
               <rules>
-                <!--
-                Require Maven 3.0.4+, but not Maven 3.1+
-                -->
-                <requireMavenVersion>
-                  <version>[3.0.4,3.1)</version>
-                </requireMavenVersion>
-
                 <!--
                 Require Java 7+
                 -->
@@ -1063,7 +1056,7 @@
                     </pluginExecution>
                     <pluginExecution>
                       <pluginExecutionFilter>
-                        <groupId>org.sonatype.nexus</groupId>
+                        <groupId>io.takari.nexus</groupId>
                         <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
                         <versionRange>[1.0,)</versionRange>
                         <goals>

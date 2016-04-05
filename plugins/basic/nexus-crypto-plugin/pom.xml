@@ -69,7 +69,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.nexus</groupId>
+        <groupId>io.takari.nexus</groupId>
         <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
         <configuration>
           <sharedDependencies>
@@ -92,7 +92,7 @@
                 <!--
                 BC provider will be installed as a separate bundle to pass signature verification
                 -->
-                <manifest file="${project.build.directory}/nexus-plugin-bundle/osgi.metadata" mode="update">
+                <manifest file="${project.build.directory}/META-INF/MANIFEST.MF" mode="update">
                   <attribute name="Require-Bundle" value="bcprov"/>
                 </manifest>
               </target>
