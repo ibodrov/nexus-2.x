@@ -100,7 +100,6 @@
     <!--
     Configuration of 'nexus-plugin' packaging and bundles.
     -->
-    <nexus-plugin-bundle.version>1.6-SNAPSHOT</nexus-plugin-bundle.version>
     <nexus-plugin.type>nexus-plugin</nexus-plugin.type>
 
     <!-- logging configuration used in logback config files to control test logging -->
@@ -526,11 +525,8 @@
         <plugin>
           <groupId>io.takari.nexus</groupId>
           <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
-          <version>${nexus-plugin-bundle.version}</version>
+          <version>1.6</version>
           <extensions>true</extensions>
-          <configuration>
-            <bannedRootArtifactId>org.sonatype.nexus:nexus-plugin-api:jar:${nexus.version}</bannedRootArtifactId>
-          </configuration>
         </plugin>
 
         <plugin>
