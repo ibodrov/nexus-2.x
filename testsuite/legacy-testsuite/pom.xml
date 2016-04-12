@@ -373,6 +373,7 @@
               </execution>
             </executions>
             <configuration>
+              <nexusBundleName>nexus-${project.version}</nexusBundleName>
               <setupMaven>true</setupMaven>
               <nexusBundleArtifact>
                 <groupId>${it.nexus.bundle.groupId}</groupId>
