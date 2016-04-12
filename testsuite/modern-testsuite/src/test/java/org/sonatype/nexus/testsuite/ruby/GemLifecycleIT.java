@@ -15,6 +15,7 @@ package org.sonatype.nexus.testsuite.ruby;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.sonatype.nexus.ruby.client.RubyProxyRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -26,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import static org.sonatype.nexus.testsuite.ruby.TestUtils.lastLine;
 import static org.sonatype.nexus.testsuite.ruby.TestUtils.numberOfLines;
 
+@Ignore
 public class GemLifecycleIT
     extends RubyITSupport
 {
