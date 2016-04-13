@@ -152,10 +152,33 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>eclipse-runtime</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>p2-runtime</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>${project.basedir}/src/main/assemble/bundle.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>io.takari.nexus</groupId>
         <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
         <configuration>
-          <assemblyDescriptor>${project.basedir}/src/main/assemble/bundle.xml</assemblyDescriptor>
+          <extraIncludes>
+            <extraInclude>target/p2-runtime/**</extraInclude>
+          </extraIncludes>
         </configuration>
       </plugin>
     </plugins>
