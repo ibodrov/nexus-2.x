@@ -12,6 +12,7 @@
  */
 package org.sonatype.nexus.testsuite.config.nexus2490;
 
+import org.junit.Ignore;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.RequestFacade;
 import org.sonatype.nexus.plugins.lvo.api.dto.LvoConfigDTO;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 
+@Ignore("cstamas: Removed from Takari bundle")
 public class Nexus2490LvoConfigCheckIT
     extends AbstractNexusIntegrationTest
 {

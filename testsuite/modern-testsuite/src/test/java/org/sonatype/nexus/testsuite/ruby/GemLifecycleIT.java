@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.is;
 import static org.sonatype.nexus.testsuite.ruby.TestUtils.lastLine;
 import static org.sonatype.nexus.testsuite.ruby.TestUtils.numberOfLines;
 
-@Ignore
+@Ignore("cstamas: Fails consistently")
 public class GemLifecycleIT
     extends RubyITSupport
 {
