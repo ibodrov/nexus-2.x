@@ -92,8 +92,8 @@
                 <!--
                 BC provider will be installed as a separate bundle to pass signature verification
                 -->
-                <manifest file="${project.build.outputDirectory}/META-INF/MANIFEST.MF" mode="update">
-                  <attribute name="Require-Bundle" value="bcprov"/>
+                <manifest file="${project.build.directory}/META-INF/MANIFEST.MF" mode="update">
+                  <attribute name="Require-Bundle" value="org.sonatype.nexus.plugin-api;resolution:=optional,bcprov"/>
                 </manifest>
               </target>
             </configuration>
