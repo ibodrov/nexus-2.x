@@ -39,7 +39,6 @@ import org.sonatype.nexus.util.file.DirSupport;
 import org.sonatype.plugin.metadata.GAVCoordinate;
 
 import com.google.common.base.Strings;
-import org.codehaus.plexus.archiver.UnArchiver;
 import org.eclipse.core.runtime.internal.adaptor.EclipseEnvironmentInfo;
 
 @Named
@@ -64,19 +63,15 @@ class P2Runtime
 
   private final ApplicationConfiguration applicationConfiguration;
 
-  private final UnArchiver unArchiver;
-
   @Inject
   public P2Runtime(final EclipseBridge eclipseBridge, final EclipseLocationFactory eclipseLocationFactory,
                    final NexusPluginRepository pluginRepositoryManager,
-                   final ApplicationConfiguration applicationConfiguration,
-                   final @Named("zip") UnArchiver unArchiver)
+                   final ApplicationConfiguration applicationConfiguration)
   {
     this.eclipseBridge = eclipseBridge;
     this.eclipseLocationFactory = eclipseLocationFactory;
     this.pluginRepositoryManager = pluginRepositoryManager;
     this.applicationConfiguration = applicationConfiguration;
-    this.unArchiver = unArchiver;
   }
 
   EclipseInstance get() {
@@ -119,17 +114,11 @@ class P2Runtime
           "Cannot create nexus-p2-bridge temporary directory " + p2BridgeRuntimeDir.getAbsolutePath(), e
       );
     }
-    // create a fresh eclipse instance
-    try {
-      unArchiver.setSourceFile(new File(p2BridgePluginDir, "p2-runtime/eclipse.zip"));
-      unArchiver.setDestDirectory(p2BridgeRuntimeDir);
-      unArchiver.extract();
-    }
-    catch (final Exception e) {
-      throw new RuntimeException("Cannot unpack Eclipse", e);
-    }
-
-    final EclipseLocation eclipseLocation = eclipseLocationFactory.createStaticEclipseLocation(eclipseDir);
+    final EclipseLocation eclipseLocation = eclipseLocationFactory.createPackedEclipseLocation(
+            new File(p2BridgePluginDir, "p2-runtime/eclipse.zip"),
+            p2BridgeRuntimeDir,
+            false // reuse
+    );
 
     eclipse = eclipseBridge.createInstance(eclipseLocation);
     try {

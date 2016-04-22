@@ -285,8 +285,8 @@
                 <xml>org.apache.maven:apache-maven:2.0.6:tar.gz:bin</xml>
                 <xml>org.apache.ivy:apache-ivy:2.2.0:tar.gz:bin</xml>
                 <!-- p2 -->
-                <xml>org.sonatype.maven.plugins:maven-p2-bridge-plugin:1.1.6</xml>
-                <xml>org.sonatype.p2.bridge:org.sonatype.p2.bridge.impl:1.1.6</xml>
+                <xml>io.takari.maven.plugins:maven-p2-bridge-plugin:1.1.10</xml>
+                <xml>io.takari.p2.bridge:org.sonatype.p2.bridge.impl:1.1.10</xml>
               </extraArtifacts>
             </configuration>
             <executions>

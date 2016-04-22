@@ -41,12 +41,12 @@
     </dependency>
 
     <dependency>
-      <groupId>org.sonatype.p2.bridge</groupId>
+      <groupId>io.takari.p2.bridge</groupId>
       <artifactId>eclipse-bridge</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.sonatype.p2.bridge</groupId>
+      <groupId>io.takari.p2.bridge</groupId>
       <artifactId>org.sonatype.p2.bridge.api</artifactId>
     </dependency>
 
@@ -71,12 +71,12 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.sonatype.p2.bridge</groupId>
+                  <groupId>io.takari.p2.bridge</groupId>
                   <artifactId>org.sonatype.p2.bridge.api</artifactId>
                   <outputDirectory>${project.build.directory}/dependency/org.sonatype.p2.bridge.api</outputDirectory>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.sonatype.p2.bridge</groupId>
+                  <groupId>io.takari.p2.bridge</groupId>
                   <artifactId>org.sonatype.p2.bridge.model</artifactId>
                   <outputDirectory>${project.build.directory}/dependency/org.sonatype.p2.bridge.model</outputDirectory>
                 </artifactItem>
@@ -92,7 +92,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.sonatype.p2.bridge</groupId>
+                  <groupId>io.takari.p2.bridge</groupId>
                   <artifactId>org.sonatype.p2.bridge.impl</artifactId>
                   <outputDirectory>${project.build.directory}/dependency/bundles</outputDirectory>
                 </artifactItem>
@@ -113,39 +113,13 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.sonatype.p2.bridge</groupId>
+                  <groupId>io.takari.p2.bridge</groupId>
                   <artifactId>p2-runtime</artifactId>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}/dependency</outputDirectory>
                 </artifactItem>
               </artifactItems>
               <stripVersion>true</stripVersion>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <artifactSet>
-                <includes>
-                  <include>org.sonatype.p2.bridge:org.sonatype.p2.bridge.api</include>
-                  <include>org.sonatype.p2.bridge:org.sonatype.p2.bridge.model</include>
-                </includes>
-              </artifactSet>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/sisu/javax.inject.Named</resource>
-                </transformer>
-              </transformers>
             </configuration>
           </execution>
         </executions>
@@ -179,6 +153,9 @@
           <extraIncludes>
             <extraInclude>target/p2-runtime/**</extraInclude>
           </extraIncludes>
+          <hasComponents>
+            <hasComponent>io.takari.p2.bridge:eclipse-bridge</hasComponent>
+          </hasComponents>
         </configuration>
       </plugin>
     </plugins>

@@ -525,7 +525,7 @@
         <plugin>
           <groupId>io.takari.nexus</groupId>
           <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
-          <version>1.7</version>
+          <version>1.8</version>
           <extensions>true</extensions>
         </plugin>
 

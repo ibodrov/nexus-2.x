@@ -27,11 +27,13 @@ import org.sonatype.sisu.litmus.testsupport.net.TrustingX509TrustManager;
 
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.restlet.data.MediaType;
 
 import static org.sonatype.nexus.test.utils.NexusRequestMatchers.isSuccessful;
 
+@Ignore("Tests ApacheDS LDAPS capability (and DS version uses RSA 512 key-size that is banned on Java8+, see org.apache.directory.server.core.security.TlsKeyGenerator")
 public class Nexus5193LdapsSupportIT
     extends AbstractLdapIntegrationIT
 {

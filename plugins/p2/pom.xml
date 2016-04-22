@@ -28,7 +28,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <p2-bridge.version>1.1.8</p2-bridge.version>
+    <p2-bridge.version>1.1.10</p2-bridge.version>
   </properties>
 
   <modules>
@@ -40,31 +40,31 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.sonatype.p2.bridge</groupId>
+        <groupId>io.takari.p2.bridge</groupId>
         <artifactId>org.sonatype.p2.bridge.api</artifactId>
         <version>${p2-bridge.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.p2.bridge</groupId>
+        <groupId>io.takari.p2.bridge</groupId>
         <artifactId>org.sonatype.p2.bridge.model</artifactId>
         <version>${p2-bridge.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.p2.bridge</groupId>
+        <groupId>io.takari.p2.bridge</groupId>
         <artifactId>org.sonatype.p2.bridge.impl</artifactId>
         <version>${p2-bridge.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.p2.bridge</groupId>
+        <groupId>io.takari.p2.bridge</groupId>
         <artifactId>eclipse-bridge</artifactId>
         <version>${p2-bridge.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.p2.bridge</groupId>
+        <groupId>io.takari.p2.bridge</groupId>
         <artifactId>p2-runtime</artifactId>
         <version>${p2-bridge.version}</version>
         <type>zip</type>
