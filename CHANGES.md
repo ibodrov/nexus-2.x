@@ -9,9 +9,9 @@ The branch contains several (non runtime source related) changes:
   * as a consequence of that above, instead of [sonatype/nexus-plugin-bundle](https://github.com/sonatype/nexus-plugin-bundle/)
     build uses [takari/nexus-plugin-bundle-maven-plugin](https://github.com/takari/nexus-plugin-bundle-maven-plugin), a simplified
     and more compatible plugin to produce Nexus Plugin bundles.
-  * some ITs were using ciphers that Java8 disabled, hence build was failing on Java 8. Those ITs are `@Ignore`d.
+  * one LDAP IT was using ciphers that Java8 disabled, hence build was failing on Java 8. IT is `@Ignore`d.
   * P2 bridge plugin updated to receive latest updates from [sonatype/p2-bridge](https://github.com/sonatype/p2-bridge),
-    as original code was also dependant on `org.sonatype.aether`.
+    as original code was dependant on `org.sonatype.aether`, preventing ITs to run with latest Maven.
 * npm related ITs (non-runtime code) are changed in a way to test scoped packages too, added some resources
 * Some "unstable" ITs are set `@Ignore`d (they were always unstable)
 
