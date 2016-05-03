@@ -51,9 +51,9 @@
   </ciManagement>
 
   <scm>
-    <connection>scm:git:git://github.com/sonatype/nexus2-internal.git</connection>
-    <developerConnection>scm:git:git@github.com:sonatype/nexus2-internal.git</developerConnection>
-    <url>https://github.com/sonatype/nexus2-internal</url>
+    <connection>scm:git:git://github.com/takari/nexus-2.x.git</connection>
+    <developerConnection>scm:git:git@github.com:takari/nexus-2.x.git</developerConnection>
+    <url>https://github.com/takari/nexus-2.x</url>
   </scm>
 
   <repositories>
@@ -88,6 +88,20 @@
   </prerequisites>
 
   <properties>
+    <!-- Release/Distribution related -->
+    <public.serverId>takari.releases</public.serverId>
+    <public.nexusUrl>https://otto.takari.io</public.nexusUrl>
+
+    <public-release.serverId>${public.serverId}</public-release.serverId>
+    <public-release.url>
+      https://otto.takari.io/service/local/staging/deploy/maven2
+    </public-release.url>
+
+    <public-snapshot.serverId>${public.serverId}</public-snapshot.serverId>
+    <public-snapshot.url>
+      https://otto.takari.io/content/repositories/snapshots
+    </public-snapshot.url>
+
     <!--
     Define nexus versions.  The 'nexus.version' property always refers to the version of the current project.
     These values must always be constants; 'nexus.version' will get update automatically by set-version.
