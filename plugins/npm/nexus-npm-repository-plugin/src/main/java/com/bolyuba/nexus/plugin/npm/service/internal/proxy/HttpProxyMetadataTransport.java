@@ -37,16 +37,11 @@ import com.bolyuba.nexus.plugin.npm.service.internal.MetadataParser;
 import com.bolyuba.nexus.plugin.npm.service.internal.PackageRootIterator;
 import com.bolyuba.nexus.plugin.npm.service.internal.ProxyMetadataTransport;
 import com.google.common.base.Stopwatch;
-import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.MetricsRegistry;
-import com.yammer.metrics.core.Timer;
-import com.yammer.metrics.core.TimerContext;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.util.EntityUtils;
@@ -71,15 +66,12 @@ public class HttpProxyMetadataTransport
 
   private final HttpClientManager httpClientManager;
 
-  private final MetricsRegistry metricsRegistry;
-
   @Inject
   public HttpProxyMetadataTransport(final MetadataParser metadataParser,
                                     final HttpClientManager httpClientManager)
   {
     this.metadataParser = checkNotNull(metadataParser);
     this.httpClientManager = checkNotNull(httpClientManager);
-    this.metricsRegistry = Metrics.defaultRegistry();
   }
 
   /**
@@ -99,8 +91,6 @@ public class HttpProxyMetadataTransport
       final HttpClientContext context = new HttpClientContext();
       context.setAttribute(Hc4Provider.HTTP_CTX_KEY_REPOSITORY, npmProxyRepository);
 
-      final Timer timer = timer(get, npmProxyRepository.getRemoteUrl());
-      final TimerContext timerContext = timer.time();
       Stopwatch stopwatch = null;
 
       if (outboundRequestLog.isDebugEnabled()) {
@@ -116,7 +106,6 @@ public class HttpProxyMetadataTransport
         throw new RemoteStorageTransportOverloadedException(npmProxyRepository, "npm HC overload: GET " + get.getURI(), e);
       }
       finally {
-        timerContext.stop();
         if (stopwatch != null) {
           stopwatch.stop();
         }
@@ -179,8 +168,6 @@ public class HttpProxyMetadataTransport
       final HttpClientContext context = new HttpClientContext();
       context.setAttribute(Hc4Provider.HTTP_CTX_KEY_REPOSITORY, npmProxyRepository);
 
-      final Timer timer = timer(get, npmProxyRepository.getRemoteUrl());
-      final TimerContext timerContext = timer.time();
       Stopwatch stopwatch = null;
 
       if (outboundRequestLog.isDebugEnabled()) {
@@ -196,7 +183,6 @@ public class HttpProxyMetadataTransport
         throw new RemoteStorageTransportOverloadedException(npmProxyRepository, "npm HC overload: GET " + get.getURI(), e);
       }
       finally {
-        timerContext.stop();
         if (stopwatch != null) {
           stopwatch.stop();
         }
@@ -244,9 +230,5 @@ public class HttpProxyMetadataTransport
     else {
       return registryUrl + "/" + pathElem;
     }
-  }
-
-  private Timer timer(final HttpUriRequest httpRequest, final String baseUrl) {
-    return metricsRegistry.newTimer(HttpProxyMetadataTransport.class, baseUrl, httpRequest.getMethod());
   }
 }
