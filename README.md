@@ -12,13 +12,17 @@
     Eclipse Foundation. All other trademarks are the property of their respective owners.
 
 -->
-# Nexus Repository Manager OSS Codebase 
+# Takari Enhanced Nexus Repository Manager OSS Codebase 
 
 ## Requirements
 
-* Apache Maven 3.0.4+
-* Java 7+
+* Apache Maven 3+
+* Java 8+
 * Network access to https://repository.sonatype.org/content/groups/sonatype-public-grid
+
+## Patches
+
+Applied patches are listed [here](PATCHES.md).
 
 ## Building
 
