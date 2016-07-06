@@ -66,7 +66,12 @@ public abstract class NpmITSupport
   protected NexusBundleConfiguration configureNexus(final NexusBundleConfiguration configuration) {
     return super.configureNexus(configuration)
         .setLogLevel("com.bolyuba.nexus.plugin.npm", "DEBUG")
-        .setLogLevel("remote.storage.outbound", "DEBUG"); // see outbound HTTP requests
+        .setLogLevel("remote.storage.outbound", "DEBUG") // see outbound HTTP requests
+        .addPlugins(
+            artifactResolver().resolvePluginFromDependencyManagement(
+                "org.sonatype.nexus.plugins", "nexus-npm-repository-plugin"
+            )
+        );
   }
 
   @BeforeClass
