@@ -44,7 +44,7 @@ import static org.sonatype.nexus.bootstrap.monitor.KeepAliveThread.KEEP_ALIVE_TI
 public class Launcher
 {
   // FIXME: Move this to CommandMonitorThread
-  public static final String COMMAND_MONITOR_PORT = CommandMonitorThread.class.getName() + ".port";
+  public static final String COMMAND_MONITOR_PORT = "COMMAND_MONITOR_PORT";
 
   public static final String SYSTEM_USERID = "*SYSTEM";
 

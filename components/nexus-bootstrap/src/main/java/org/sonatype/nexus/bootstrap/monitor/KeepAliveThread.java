@@ -29,11 +29,11 @@ public class KeepAliveThread
 {
   // NOTE: Avoiding any logging our sysout usage by this class, this could lockup logging when its detected remote unreachable
 
-  public static final String KEEP_ALIVE_PORT = KeepAliveThread.class.getName() + ".port";
+  public static final String KEEP_ALIVE_PORT = "KEEP_ALIVE_PORT";
 
-  public static final String KEEP_ALIVE_PING_INTERVAL = KeepAliveThread.class.getName() + ".pingInterval";
+  public static final String KEEP_ALIVE_PING_INTERVAL = "KEEP_ALIVE_PING_INTERVAL";
 
-  public static final String KEEP_ALIVE_TIMEOUT = KeepAliveThread.class.getName() + ".timeout";
+  public static final String KEEP_ALIVE_TIMEOUT = "KEEP_ALIVE_TIMEOUT";
 
   private final CommandMonitorTalker talker;
 

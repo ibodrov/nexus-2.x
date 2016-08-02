@@ -51,7 +51,7 @@ public class NexusITLauncher
    * Name of environment variable/system property to be looked up for the port number of command monitor thread.
    * If not present, command monitor will not be started.
    */
-  public static final String COMMAND_MONITOR_PORT = NexusITLauncher.class.getName() + ".monitor.port";
+  public static final String COMMAND_MONITOR_PORT = "COMMAND_MONITOR_PORT";
 
   /**
    * 5 seconds in milliseconds.
